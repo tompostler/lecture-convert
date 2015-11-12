@@ -87,7 +87,7 @@ namespace UnlimitedInf.LectureConvert
                         info.Url = new Uri(lineData[0]);
                         info.AlbumName = lineData[1];
                         info.Title = lineData[2];
-                        info.Track = Int32.Parse(lineData[3]);
+                        info.Track = Utility.ParseInt(lineData[3]);
                         opts.Lectures.Add(info);
                     }
                 }

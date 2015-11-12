@@ -16,6 +16,18 @@
         }
 
         /// <summary>
+        /// A wrapper for <see cref="Int32.Parse(string, NumberStyles, IFormatProvider)"/> that
+        /// automatically uses the <see cref="NumberStyles.Integer"/> and
+        /// <see cref="CultureInfo.InvariantCulture"/> to parse the string.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static int ParseInt(string value)
+        {
+            return Int32.Parse(value, NumberStyles.Integer, CultureInfo.InvariantCulture);
+        }
+
+        /// <summary>
         /// A wrapper for <see cref="String.Format(IFormatProvider, string, object[])"/> that 
         /// automatically uses the <see cref="CultureInfo.InvariantCulture"/> to format the string.
         /// </summary>

@@ -16,6 +16,11 @@
         /// <param name="opts"></param>
         public App(Options opts)
         {
+            if (opts == null)
+            {
+                throw new ArgumentNullException(nameof(opts));
+            }
+
             _lectures = opts.Lectures;
             throw new NotImplementedException();
         }

@@ -13,7 +13,7 @@
         public int Track { get; set; }
 
         public string FileName      => AlbumName + '_' + Title;
-        public string FileNameMp3   => FileName + ".mp3";
-        public string FileNameMp4   => FileName + ".mp4";
+        public string FileNameMP3   => FileName + ".mp3";
+        public string FileNameMP4   => FileName + ".mp4";
     }
 }
