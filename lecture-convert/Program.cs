@@ -4,7 +4,6 @@ namespace UnlimitedInf.LectureConvert
     using Mono.Options;
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
     using System.IO;
 
     class Program
@@ -26,7 +25,8 @@ namespace UnlimitedInf.LectureConvert
                 "Each line in the input text file for the downloaded recordings should be set up as follows for each line:",
                 "   URL/to/file|AlbumName|TrackTitle|TrackNumber",
                 "",
-                "The resulting filename will be gleaned from the above information:",
+                "The resulting filename will be gleaned from the above information, but it does not bother to check if you gave it a sensical name or not.",
+                "The file name is formed as follows:",
                 "   AlbumName_TrackTitle.mp[3|4]",
                 //"",
                 //"Options:",
@@ -46,7 +46,7 @@ namespace UnlimitedInf.LectureConvert
             }
             catch (OptionException e)
             {
-                Console.WriteLine(Format(Messages.ErrorText, e.Message));
+                Console.WriteLine(Utility.Format(Messages.ErrorText, e.Message));
                 return;
             }
 
@@ -76,40 +76,30 @@ namespace UnlimitedInf.LectureConvert
 
                         // Split the line by | and make sure there are three parts
                         string[] lineData = line.Split('|');
-                        if (lineData.Length != 3)
+                        if (lineData.Length != 4)
                         {
-                            Console.WriteLine(Format(Messages.ErrorText_InvalidInputLine, line));
+                            Console.WriteLine(Utility.Format(Messages.ErrorText_InvalidInputLine, line));
                             return;
                         }
 
+                        // Fill a lecture info
                         LectureInfo info = new LectureInfo();
                         info.Url = new Uri(lineData[0]);
                         info.AlbumName = lineData[1];
                         info.Title = lineData[2];
+                        info.Track = Int32.Parse(lineData[3]);
                         opts.Lectures.Add(info);
                     }
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine(Format(Messages.ErrorText, e.Message));
+                Console.WriteLine(Utility.Format(Messages.ErrorText, e.Message));
                 return;
             }
 
             App app = new App(opts);
             app.Run();
-        }
-
-        /// <summary>
-        /// A wrapper for <see cref="String.Format(IFormatProvider, string, object[])"/> that 
-        /// automatically uses the <see cref="CultureInfo.InvariantCulture"/> to format the string.
-        /// </summary>
-        /// <param name="msg"></param>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        public static string Format(string msg, params object[] args)
-        {
-            return String.Format(CultureInfo.InvariantCulture, msg, args);
         }
     }
 }
