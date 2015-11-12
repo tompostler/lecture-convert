@@ -94,6 +94,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="test_input_file.txt" />
     <Content Include="unlimitedinf.ico" />
   </ItemGroup>
   <ItemGroup>

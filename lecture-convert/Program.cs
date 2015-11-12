@@ -60,17 +60,21 @@ namespace UnlimitedInf.LectureConvert
             // Parse the input file
             try
             {
+                // Open the text file
                 using (StreamReader r = File.OpenText(file[0]))
                 {
                     string line;
+                    // While there are still lines to read
                     while (!r.EndOfStream)
                     {
                         line = r.ReadLine();
+                        // But skip empty lines
                         if (String.IsNullOrEmpty(line))
                         {
                             continue;
                         }
 
+                        // Split the line by | and make sure there are three parts
                         string[] lineData = line.Split('|');
                         if (lineData.Length != 3)
                         {
@@ -92,7 +96,7 @@ namespace UnlimitedInf.LectureConvert
                 return;
             }
 
-            App app = new App();
+            App app = new App(opts);
             app.Run();
         }
 
