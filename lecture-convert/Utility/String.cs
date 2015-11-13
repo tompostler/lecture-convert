@@ -1,20 +1,10 @@
-﻿namespace UnlimitedInf.LectureConvert
+﻿namespace UnlimitedInf.LectureConvert.Utility
 {
     using System;
     using System.Globalization;
 
-    internal static class Utility
+    internal static class String
     {
-        /// <summary>
-        /// Writes a string to the console and then returns the cursor to the beginning of the line.
-        /// </summary>
-        /// <param name="value"></param>
-        public static void ConsoleWriteAndReturn(string value)
-        {
-            Console.Write(value);
-            Console.SetCursorPosition(0, Console.CursorTop);
-        }
-
         /// <summary>
         /// A wrapper for <see cref="Int32.Parse(string, NumberStyles, IFormatProvider)"/> that
         /// automatically uses the <see cref="NumberStyles.Integer"/> and
@@ -36,7 +26,7 @@
         /// <returns></returns>
         public static string Format(string msg, params object[] args)
         {
-            return String.Format(CultureInfo.InvariantCulture, msg, args);
+            return System.String.Format(CultureInfo.InvariantCulture, msg, args);
         }
     }
 }

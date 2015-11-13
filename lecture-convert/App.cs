@@ -6,6 +6,9 @@
     /// <summary>
     /// The main application.
     /// </summary>
+    /// This program makes a couple of assumptions since it is to be used internally by one person 
+    /// that's not trying to do anything stupid while the program is running:
+    ///     - No file safety checks. Assumes a rigid file structure that won't be changing.
     public sealed class App
     {
         private ICollection<LectureInfo> _lectures { get; }
@@ -25,6 +28,9 @@
             throw new NotImplementedException();
         }
 
-        public void Run() { }
+        public void Run()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
