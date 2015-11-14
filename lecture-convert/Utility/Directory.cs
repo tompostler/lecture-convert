@@ -3,10 +3,10 @@
     using System;
     using System.IO;
 
-    internal static class File
+    internal static class Directory
     {
         /// <summary>
-        /// Check if a file exists given a path.
+        /// Check if a directory exists given a path.
         /// </summary>
         /// <param name="fullPath"></param>
         /// <returns></returns>
@@ -14,8 +14,8 @@
         {
             try
             {
-                FileInfo fi = new FileInfo(fullPath);
-                return fi.Exists;
+                DirectoryInfo di = new DirectoryInfo(fullPath);
+                return di.Exists;
             }
             catch (Exception ex) when (ex is System.Security.SecurityException
                                         || ex is ArgumentException || ex is UnauthorizedAccessException

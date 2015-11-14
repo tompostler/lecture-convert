@@ -47,5 +47,24 @@
                 System.Console.WriteLine(obj);
             }
         }
+
+        /// <summary>
+        /// Write a log string to the console.
+        /// </summary>
+        /// <param name="comment"></param>
+        public static void Log(string comment)
+        {
+            WriteLine(String.Format(Messages.LogText, comment));
+        }
+
+        /// <summary>
+        /// Writes a log line to the console, now with formatting!
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <param name="args"></param>
+        public static void Log(string msg, params object[] args)
+        {
+            WriteLine(String.Format(msg, args));
+        }
     }
 }

@@ -126,4 +126,7 @@
   <data name="ErrorText_MustHaveInputFile" xml:space="preserve">
     <value>LECTURECONVERT: Must have one INPUTFILE.</value>
   </data>
+  <data name="LogText" xml:space="preserve">
+    <value>LC: {0}</value>
+  </data>
 </root>

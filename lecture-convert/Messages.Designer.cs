@@ -86,5 +86,14 @@ namespace UnlimitedInf.LectureConvert {
                 return ResourceManager.GetString("ErrorText_MustHaveInputFile", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to LC: {0}.
+        /// </summary>
+        internal static string LogText {
+            get {
+                return ResourceManager.GetString("LogText", resourceCulture);
+            }
+        }
     }
 }

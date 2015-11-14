@@ -46,7 +46,7 @@ namespace UnlimitedInf.LectureConvert
             }
             catch (OptionException e)
             {
-                Console.WriteLine(Utility.Format(Messages.ErrorText, e.Message));
+                Console.WriteLine(Utility.String.Format(Messages.ErrorText, e.Message));
                 return;
             }
 
@@ -78,7 +78,7 @@ namespace UnlimitedInf.LectureConvert
                         string[] lineData = line.Split('|');
                         if (lineData.Length != 4)
                         {
-                            Console.WriteLine(Utility.Format(Messages.ErrorText_InvalidInputLine, line));
+                            Console.WriteLine(Utility.String.Format(Messages.ErrorText_InvalidInputLine, line));
                             return;
                         }
 
@@ -87,14 +87,14 @@ namespace UnlimitedInf.LectureConvert
                         info.Url = new Uri(lineData[0]);
                         info.AlbumName = lineData[1];
                         info.Title = lineData[2];
-                        info.Track = Utility.ParseInt(lineData[3]);
+                        info.Track = Utility.String.ParseInt(lineData[3]);
                         opts.Lectures.Add(info);
                     }
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine(Utility.Format(Messages.ErrorText, e.Message));
+                Console.WriteLine(Utility.String.Format(Messages.ErrorText, e.Message));
                 return;
             }
 

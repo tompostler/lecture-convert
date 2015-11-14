@@ -25,12 +25,19 @@
             }
 
             _lectures = opts.Lectures;
-            throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Runs the entire program.
+        /// </summary>
+        /// This method will do the following four things in order:
+        /// 1)  Download the mp4s           (if not already existing)
+        /// 2)  Convert the mp4s to mp3s    (if not already existing)
+        /// 3)  Process the mp3s            (if not already existing)
+        /// 4)  Update id3 tags             (if different than existing)
         public void Run()
         {
-            throw new NotImplementedException();
+            Download.Run(_lectures);
         }
     }
 }
