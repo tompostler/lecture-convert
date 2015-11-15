@@ -106,6 +106,24 @@ namespace UnlimitedInf.LectureConvert {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} lectures remaining. . ..
+        /// </summary>
+        internal static string FFMpegOverallStatus {
+            get {
+                return ResourceManager.GetString("FFMpegOverallStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Core {0} / Lec {1}: {2}.
+        /// </summary>
+        internal static string FFMpegStatus {
+            get {
+                return ResourceManager.GetString("FFMpegStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to LC: {0}.
         /// </summary>
         internal static string LogText {

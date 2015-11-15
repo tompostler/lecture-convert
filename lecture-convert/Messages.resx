@@ -132,6 +132,12 @@
   <data name="FFMpegCommand" xml:space="preserve">
     <value>-i {0} -vn -q:a 0 {1}</value>
   </data>
+  <data name="FFMpegOverallStatus" xml:space="preserve">
+    <value>{0} lectures remaining. . .</value>
+  </data>
+  <data name="FFMpegStatus" xml:space="preserve">
+    <value>Core {0} / Lec {1}: {2}</value>
+  </data>
   <data name="LogText" xml:space="preserve">
     <value>LC: {0}</value>
   </data>
