@@ -11,20 +11,22 @@
     {
         private static int _filesDownloaded = 0;
 
-        public static void Run(ICollection<LectureInfo> lectures)
+        public static void Run(ICollection<LectureInfo> allLectures)
         {
             // Check for the dir
             if (!Utility.Directory.Exists(LectureInfo.DirectoryNameMP4))
             {
-                Utility.Console.Log("Directory {0} does not exist. Creating.", LectureInfo.DirectoryNameMP4);
+                Utility.Console.Log(Messages.DirectoryNotFound, LectureInfo.DirectoryNameMP4);
                 System.IO.Directory.CreateDirectory(LectureInfo.DirectoryNameMP4);
             }
+
             // Only download necessary lectures
-            foreach (LectureInfo lecture in lectures)
+            List<LectureInfo> lectures = new List<LectureInfo>();
+            foreach (LectureInfo lecture in allLectures)
             {
-                if (Utility.File.Exists(lecture.FileNameMP4))
+                if (!Utility.File.Exists(lecture.FileNameMP4))
                 {
-                    lectures.Remove(lecture);
+                    lectures.Add(lecture);
                 }
             }
             Utility.Console.Log("{0} lectures to download", lectures.Count);
@@ -43,6 +45,12 @@
 
             // Wait until all downloads are done
             Task.WaitAll(downloads);
+
+            // Write all the lines past the progresses
+            foreach (string status in statuses)
+            {
+                Utility.Console.WriteLine(status);
+            }
         }
 
         /// <summary>

@@ -61,6 +61,15 @@ namespace UnlimitedInf.LectureConvert {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Directory {0} does not exist. Creating..
+        /// </summary>
+        internal static string DirectoryNotFound {
+            get {
+                return ResourceManager.GetString("DirectoryNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to LECTURECONVERT: {0}.
         /// </summary>
         internal static string ErrorText {
