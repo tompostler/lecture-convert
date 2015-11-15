@@ -103,7 +103,9 @@
     <Content Include="ffmpeg.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="test_input_file.txt" />
+    <Content Include="test_input_file.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="unlimitedinf.ico" />
   </ItemGroup>
   <ItemGroup>
