@@ -97,6 +97,15 @@ namespace UnlimitedInf.LectureConvert {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to -i {0} -vn -q:a 0 {1}.
+        /// </summary>
+        internal static string FFMpegCommand {
+            get {
+                return ResourceManager.GetString("FFMpegCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to LC: {0}.
         /// </summary>
         internal static string LogText {

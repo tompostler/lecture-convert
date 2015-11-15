@@ -129,6 +129,9 @@
   <data name="ErrorText_MustHaveInputFile" xml:space="preserve">
     <value>LECTURECONVERT: Must have one INPUTFILE.</value>
   </data>
+  <data name="FFMpegCommand" xml:space="preserve">
+    <value>-i {0} -vn -q:a 0 {1}</value>
+  </data>
   <data name="LogText" xml:space="preserve">
     <value>LC: {0}</value>
   </data>

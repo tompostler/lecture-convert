@@ -38,6 +38,9 @@
         public void Run()
         {
             Download.Run(_lectures);
+
+            Convert convert = new Convert(_lectures);
+            convert.Run();
         }
     }
 }
