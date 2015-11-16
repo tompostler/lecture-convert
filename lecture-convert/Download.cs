@@ -29,7 +29,7 @@
                     lectures.Add(lecture);
                 }
             }
-            Utility.Console.Log("{0} lectures to download", lectures.Count);
+            Utility.Console.Log($"{lectures.Count} lectures to download");
 
             // Create the list of messages to update on and the tasks to wait for
             List<string> statuses = new List<string>(lectures.Count);

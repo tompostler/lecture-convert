@@ -38,13 +38,13 @@
                     lectures.Add(lecture);
                 }
             }
-            Utility.Console.Log("{0} lectures to convert", lectures.Count);
-            Utility.Console.Log("{0} concurrent ffmpeg procs max", System.Environment.ProcessorCount);
+            Utility.Console.Log($"{lectures.Count} lectures to convert");
+            Utility.Console.Log($"{Environment.ProcessorCount} concurrent ffmpeg procs max");
 
             // Create the list of messages to update on and the processes to wait for
             _statuses = new string[lectures.Count + 1];
             _lecturesToDo = lectures.Count;
-            _processLimit = new SemaphoreSlim(System.Environment.ProcessorCount);
+            _processLimit = new SemaphoreSlim(Environment.ProcessorCount);
             SetUpProcesses(lectures);
         }
 

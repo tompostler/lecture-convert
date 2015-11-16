@@ -49,16 +49,7 @@
         }
 
         /// <summary>
-        /// Write a log string to the console.
-        /// </summary>
-        /// <param name="comment"></param>
-        public static void Log(string comment)
-        {
-            Log(comment, null);
-        }
-
-        /// <summary>
-        /// Writes a log line to the console, now with formatting!
+        /// Writes a log line to the console.
         /// </summary>
         /// <param name="msg"></param>
         /// <param name="args"></param>
