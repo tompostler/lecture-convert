@@ -25,7 +25,7 @@
             // Check for the dir
             if (!Utility.Directory.Exists(LectureInfo.DirectoryNameMP3))
             {
-                Utility.Console.Log(Messages.DirectoryNotFound, LectureInfo.DirectoryNameMP3);
+                Utility.Console.Log($"Directory not found: {LectureInfo.DirectoryNameMP3}");
                 System.IO.Directory.CreateDirectory(LectureInfo.DirectoryNameMP3);
             }
 
@@ -101,7 +101,7 @@
             // If the line does not begin with 'size', then don't print it
             else if (data.StartsWith("size"))
             {
-                _statuses[0] = Utility.String.Format(Messages.FFMpegOverallStatus, _lecturesToDo);
+                _statuses[0] = $"{_lecturesToDo} lectures remaining. . .";
                 _statuses[i + 1] = data;
                 Utility.Console.WriteLinesAndReturn(_statuses);
             }
@@ -120,7 +120,7 @@
             {
                 // Set up the starting process
                 ProcessStartInfo processInfo = new ProcessStartInfo();
-                processInfo.Arguments = Utility.String.Format(Messages.FFMpegCommand, lecture.FileNameMP4, lecture.FileNameMP3);
+                processInfo.Arguments = $"-i {lecture.FileNameMP4} -vn -q:a 0 {lecture.FileNameMP3}";
                 processInfo.CreateNoWindow = false;
                 processInfo.FileName = "ffmpeg.exe";
                 processInfo.RedirectStandardError = true;

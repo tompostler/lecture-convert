@@ -1,7 +1,5 @@
 ## Manually Added - with rationale
 
-# Don't commit the private key to sign the executable
-lectureconvert.snk
 # Do commit the ffmpeg.exe
 !ffmpeg.exe
 # Don't commit the test file

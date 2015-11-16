@@ -54,7 +54,7 @@
         /// <param name="comment"></param>
         public static void Log(string comment)
         {
-            WriteLine(String.Format(Messages.LogText, comment));
+            Log(comment, null);
         }
 
         /// <summary>
@@ -64,7 +64,17 @@
         /// <param name="args"></param>
         public static void Log(string msg, params object[] args)
         {
-            Log(String.Format(msg, args));
+            WriteLine($"LC: {System.String.Format(msg, args)}");
+        }
+
+        /// <summary>
+        /// Writes an error line to the console.
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <param name="args"></param>
+        public static void Error(string msg, params object[] args)
+        {
+            WriteLine($"LECTURECONVERT: {System.String.Format(msg, args)}");
         }
     }
 }

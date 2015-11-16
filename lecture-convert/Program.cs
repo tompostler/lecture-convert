@@ -46,14 +46,14 @@ namespace UnlimitedInf.LectureConvert
             }
             catch (OptionException e)
             {
-                Console.WriteLine(Utility.String.Format(Messages.ErrorText, e.Message));
+                Utility.Console.Error(e.Message);
                 return;
             }
 
             // Make sure we have our input file
             if (file.Count != 1)
             {
-                Console.WriteLine(Messages.ErrorText_MustHaveInputFile);
+                Utility.Console.Error("Must have one INPUTFILE.");
                 return;
             }
 
@@ -78,7 +78,7 @@ namespace UnlimitedInf.LectureConvert
                         string[] lineData = line.Split('|');
                         if (lineData.Length != 4)
                         {
-                            Console.WriteLine(Utility.String.Format(Messages.ErrorText_InvalidInputLine, line));
+                            Utility.Console.Error($"Invalid line in INPUTFILE: {line}");
                             return;
                         }
 
@@ -87,14 +87,14 @@ namespace UnlimitedInf.LectureConvert
                         info.Url = new Uri(lineData[0]);
                         info.AlbumName = lineData[1];
                         info.Title = lineData[2];
-                        info.Track = Utility.String.ParseInt(lineData[3]);
+                        info.Track = Int32.Parse(lineData[3]);
                         opts.Lectures.Add(info);
                     }
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine(Utility.String.Format(Messages.ErrorText, e.Message));
+                Utility.Console.Error(e.Message);
                 return;
             }
 

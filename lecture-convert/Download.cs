@@ -16,7 +16,7 @@
             // Check for the dir
             if (!Utility.Directory.Exists(LectureInfo.DirectoryNameMP4))
             {
-                Utility.Console.Log(Messages.DirectoryNotFound, LectureInfo.DirectoryNameMP4);
+                Utility.Console.Log($"Directory not found: {LectureInfo.DirectoryNameMP4}");
                 System.IO.Directory.CreateDirectory(LectureInfo.DirectoryNameMP4);
             }
 
@@ -80,7 +80,7 @@
         /// <param name="id"></param>
         private static void UpdateConsole(int progressPercentage, LectureInfo lecture, List<string> statuses, int id)
         {
-            statuses[id] = Utility.String.Format("{0} is {1}% complete.", lecture.FileNameMP4, progressPercentage);
+            statuses[id] = $"{lecture.FileNameMP4} is {progressPercentage}% complete.";
             Utility.Console.WriteLinesAndReturn(statuses.ToArray());
         }
     }
