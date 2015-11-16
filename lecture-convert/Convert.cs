@@ -1,5 +1,6 @@
 ﻿namespace UnlimitedInf.LectureConvert
 {
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Threading;
@@ -91,8 +92,14 @@
         /// <param name="i"></param>
         private void UpdateConsole(string data, int i)
         {
-            // If the line is probably going to be too long for the terminal, then don't print it
-            if (data.StartsWith("size"))
+            // Null string indicates end of stream. Kindly let the user know
+            if (String.IsNullOrEmpty(data))
+            {
+                _statuses[i + 1] += ". . . done.";
+                Utility.Console.WriteLinesAndReturn(_statuses);
+            }
+            // If the line does not begin with 'size', then don't print it
+            else if (data.StartsWith("size"))
             {
                 _statuses[0] = Utility.String.Format(Messages.FFMpegOverallStatus, _lecturesToDo);
                 _statuses[i + 1] = data;
