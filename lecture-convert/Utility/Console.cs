@@ -64,7 +64,7 @@
         /// <param name="args"></param>
         public static void Log(string msg, params object[] args)
         {
-            WriteLine(String.Format(msg, args));
+            Log(String.Format(msg, args));
         }
     }
 }

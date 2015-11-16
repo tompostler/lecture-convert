@@ -1,8 +1,8 @@
 ﻿namespace UnlimitedInf.LectureConvert
 {
-    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Threading;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -12,7 +12,8 @@
     {
         private string[] _statuses;
         private int _lecturesToDo;
-        private Dictionary<int, List<Process>> _processes;
+        private List<Process> _processes;
+        private SemaphoreSlim _processLimit;
 
         /// <summary>
         /// Figure out which lectures we actually need to convert.
@@ -37,9 +38,12 @@
                 }
             }
             Utility.Console.Log("{0} lectures to convert", lectures.Count);
+            Utility.Console.Log("{0} concurrent ffmpeg procs max", System.Environment.ProcessorCount);
 
             // Create the list of messages to update on and the processes to wait for
-            _statuses = new string[Environment.ProcessorCount + 1];
+            _statuses = new string[lectures.Count + 1];
+            _lecturesToDo = lectures.Count;
+            _processLimit = new SemaphoreSlim(System.Environment.ProcessorCount);
             SetUpProcesses(lectures);
         }
 
@@ -49,10 +53,11 @@
         public void Run()
         {
             // Start the conversions
-            Task[] conversions = new Task[Environment.ProcessorCount];
+            Task[] conversions = new Task[_processes.Count];
             for (int i = 0; i < _processes.Count; i++)
             {
-                conversions[i] = Task.Run(() => RunListOfProcesses(i));
+                int processNum = i;
+                conversions[i] = Task.Run(() => RunProcess(processNum));
             }
 
             // Wait until all conversions are done
@@ -65,64 +70,59 @@
             }
         }
 
-        private void RunListOfProcesses(int processorAffinity)
+        private void RunProcess(int processNum)
         {
-            List<Process> processes = _processes[processorAffinity];
-            for (int i = 0; i < processes.Count; i++)
-            {
-                // Start the process and set up the output
-                processes[i].ErrorDataReceived += (sender, e) => UpdateConsole(e.Data, processorAffinity, i);
-                processes[i].Start();
-                processes[i].ProcessorAffinity = (IntPtr)(1 << processorAffinity);
-                processes[i].WaitForExit();
-                processes[i].Dispose();
-                _lecturesToDo--;
-            }
+            Process process = _processes[processNum];
+            // Start the process and set up the output
+            process.ErrorDataReceived += (sender, e) => UpdateConsole(e.Data, processNum);
+            _processLimit.Wait();
+            process.Start();
+            process.BeginErrorReadLine();
+            process.WaitForExit();
+            _processLimit.Release();
+            process.Dispose();
+            _lecturesToDo--;
         }
 
         /// <summary>
         /// Update the console with the current line of output.
         /// </summary>
         /// <param name="data"></param>
-        /// <param name="processorAffinity"></param>
         /// <param name="i"></param>
-        private void UpdateConsole(string data, int processorAffinity, int i)
+        private void UpdateConsole(string data, int i)
         {
-            _statuses[0] = Utility.String.Format(Messages.FFMpegOverallStatus, _lecturesToDo);
-            _statuses[processorAffinity + 1] = Utility.String.Format(Messages.FFMpegStatus, processorAffinity, i, data);
-            Utility.Console.WriteLinesAndReturn(_statuses);
+            // If the line is probably going to be too long for the terminal, then don't print it
+            if (data.StartsWith("size"))
+            {
+                _statuses[0] = Utility.String.Format(Messages.FFMpegOverallStatus, _lecturesToDo);
+                _statuses[i + 1] = data;
+                Utility.Console.WriteLinesAndReturn(_statuses);
+            }
         }
 
         /// <summary>
-        /// Set up the processes with all necessary information and place them in a list sorted by 
-        /// the processor affinity to make running them easier.
+        /// Set up the processes with all necessary information and place them in a list.
         /// </summary>
         /// <param name="lectures"></param>
         private void SetUpProcesses(List<LectureInfo> lectures)
         {
-            _processes = new Dictionary<int, List<Process>>(Environment.ProcessorCount);
+            _processes = new List<Process>(lectures.Count);
 
             // Set up the processes
-            for (int processorAffinity = 0; processorAffinity < lectures.Count; processorAffinity++)
+            foreach (LectureInfo lecture in lectures)
             {
-                // Create list if necessary
-                if (processorAffinity < Environment.ProcessorCount)
-                {
-                    _processes[processorAffinity] = new List<Process>();
-                }
-
                 // Set up the starting process
                 ProcessStartInfo processInfo = new ProcessStartInfo();
-                processInfo.Arguments = Utility.String.Format(Messages.FFMpegCommand, lectures[processorAffinity].FileNameMP4, lectures[processorAffinity].FileNameMP3);
+                processInfo.Arguments = Utility.String.Format(Messages.FFMpegCommand, lecture.FileNameMP4, lecture.FileNameMP3);
                 processInfo.CreateNoWindow = false;
                 processInfo.FileName = "ffmpeg.exe";
                 processInfo.RedirectStandardError = true;
                 processInfo.UseShellExecute = false;
 
-                // Add it into the appropriate execution bucket
-                Process p = new Process();
-                p.StartInfo = processInfo;
-                _processes[processorAffinity % Environment.ProcessorCount].Add(p);
+                // Add the process into the list
+                Process process = new Process();
+                process.StartInfo = processInfo;
+                _processes.Add(process);
             }
         }
     }
