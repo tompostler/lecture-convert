@@ -23,6 +23,7 @@
             {
                 Utility.Console.Log($"Directory not found: {LectureInfo.DirectoryNameMP4}");
                 System.IO.Directory.CreateDirectory(LectureInfo.DirectoryNameMP4);
+                Utility.Console.Log($"Created directory: {LectureInfo.DirectoryNameMP4}");
             }
 
             // Only download necessary lectures

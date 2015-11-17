@@ -26,6 +26,7 @@
             {
                 Utility.Console.Log($"Directory not found: {LectureInfo.DirectoryNameMP3}");
                 System.IO.Directory.CreateDirectory(LectureInfo.DirectoryNameMP3);
+                Utility.Console.Log($"Created directory: {LectureInfo.DirectoryNameMP3}");
             }
 
             // Only convert the necessary lectures
