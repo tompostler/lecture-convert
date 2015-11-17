@@ -113,7 +113,7 @@
         /// Set up the processes with all necessary information and place them in a list.
         /// </summary>
         /// <param name="lectures"></param>
-        /// TODO: Refactor this for sox flags
+        /// TODO: Refactor this for sox options
         private void SetUpProcesses(List<LectureInfo> lectures)
         {
             _preparations = new List<Process>(lectures.Count);
@@ -123,7 +123,7 @@
             {
                 // Set up the starting process
                 ProcessStartInfo processInfo = new ProcessStartInfo();
-                processInfo.Arguments = $"-i {lecture.FileNameMP3} -vn -q:a 0 {lecture.FileNameMP3Cleaned}";
+                processInfo.Arguments = $"{lecture.FileNameMP3} {lecture.FileNameMP3Cleaned} options";
                 processInfo.CreateNoWindow = false;
                 processInfo.FileName = "sox.exe";
                 processInfo.RedirectStandardError = true;
