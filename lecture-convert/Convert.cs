@@ -12,7 +12,6 @@
     internal class Convert
     {
         private string[] _statuses;
-        private int _lecturesToDo;
         private List<Process> _processes;
         private SemaphoreSlim _processLimit;
 
@@ -42,8 +41,7 @@
             Utility.Console.Log($"{Environment.ProcessorCount} concurrent ffmpeg procs max");
 
             // Create the list of messages to update on and the processes to wait for
-            _statuses = new string[lectures.Count + 1];
-            _lecturesToDo = lectures.Count;
+            _statuses = new string[lectures.Count];
             _processLimit = new SemaphoreSlim(Environment.ProcessorCount);
             SetUpProcesses(lectures);
         }
@@ -63,6 +61,7 @@
 
             // Wait until all conversions are done
             Task.WaitAll(conversions);
+            _processLimit.Dispose();
 
             // Write all the lines past the statuses
             foreach (string status in _statuses)
@@ -82,7 +81,6 @@
             process.WaitForExit();
             _processLimit.Release();
             process.Dispose();
-            _lecturesToDo--;
         }
 
         /// <summary>
@@ -95,14 +93,13 @@
             // Null string indicates end of stream. Kindly let the user know
             if (String.IsNullOrEmpty(data))
             {
-                _statuses[i + 1] += ". . . done.";
+                _statuses[i] += "done.";
                 Utility.Console.WriteLinesAndReturn(_statuses);
             }
             // If the line does not begin with 'size', then don't print it
             else if (data.StartsWith("size"))
             {
-                _statuses[0] = $"{_lecturesToDo} lectures remaining. . .";
-                _statuses[i + 1] = data;
+                _statuses[i] = $"{i + 1}\t{data}";
                 Utility.Console.WriteLinesAndReturn(_statuses);
             }
         }

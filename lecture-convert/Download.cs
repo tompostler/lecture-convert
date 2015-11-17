@@ -80,7 +80,7 @@
         /// <param name="id"></param>
         private static void UpdateConsole(int progressPercentage, LectureInfo lecture, List<string> statuses, int id)
         {
-            statuses[id] = $"{lecture.FileNameMP4} is {progressPercentage}% complete.";
+            statuses[id] = $"{id + 1}\t{lecture.FileNameMP4} is {progressPercentage}% complete.";
             Utility.Console.WriteLinesAndReturn(statuses.ToArray());
         }
     }
