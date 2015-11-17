@@ -9,10 +9,10 @@
     /// <summary>
     /// Run the conversions from mp4 to mp3 by as many processors as available at the same time.
     /// </summary>
-    internal class Convert
+    internal class Convert : IDisposable
     {
         private string[] _statuses;
-        private List<Process> _processes;
+        private List<Process> _conversions;
         private SemaphoreSlim _processLimit;
 
         /// <summary>
@@ -38,7 +38,10 @@
                 }
             }
             Utility.Console.Log($"{lectures.Count} lectures to convert");
-            Utility.Console.Log($"{Environment.ProcessorCount} concurrent ffmpeg procs max");
+            if (lectures.Count > 0)
+            {
+                Utility.Console.Log($"{Environment.ProcessorCount} concurrent ffmpeg procs max");
+            }
 
             // Create the list of messages to update on and the processes to wait for
             _statuses = new string[lectures.Count];
@@ -52,8 +55,8 @@
         public void Run()
         {
             // Start the conversions
-            Task[] conversions = new Task[_processes.Count];
-            for (int i = 0; i < _processes.Count; i++)
+            Task[] conversions = new Task[_conversions.Count];
+            for (int i = 0; i < _conversions.Count; i++)
             {
                 int processNum = i;
                 conversions[i] = Task.Run(() => RunProcess(processNum));
@@ -72,7 +75,7 @@
 
         private void RunProcess(int processNum)
         {
-            Process process = _processes[processNum];
+            Process process = _conversions[processNum];
             // Start the process and set up the output
             process.ErrorDataReceived += (sender, e) => UpdateConsole(e.Data, processNum);
             _processLimit.Wait();
@@ -99,7 +102,7 @@
             // If the line does not begin with 'size', then don't print it
             else if (data.StartsWith("size"))
             {
-                _statuses[i] = $"{i + 1}\t{data}";
+                _statuses[i] = $"{i + 1}:\t{data}";
                 Utility.Console.WriteLinesAndReturn(_statuses);
             }
         }
@@ -110,7 +113,7 @@
         /// <param name="lectures"></param>
         private void SetUpProcesses(List<LectureInfo> lectures)
         {
-            _processes = new List<Process>(lectures.Count);
+            _conversions = new List<Process>(lectures.Count);
 
             // Set up the processes
             foreach (LectureInfo lecture in lectures)
@@ -126,8 +129,13 @@
                 // Add the process into the list
                 Process process = new Process();
                 process.StartInfo = processInfo;
-                _processes.Add(process);
+                _conversions.Add(process);
             }
+        }
+
+        public void Dispose()
+        {
+            _processLimit.Dispose();
         }
     }
 }
