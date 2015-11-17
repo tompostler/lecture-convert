@@ -93,11 +93,28 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+    <None Include="sox-14.4.2\sox.pdf" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ffmpeg.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="sox-14.4.2\libflac-8.dll" />
+    <Content Include="sox-14.4.2\libgcc_s_sjlj-1.dll" />
+    <Content Include="sox-14.4.2\libgomp-1.dll" />
+    <Content Include="sox-14.4.2\libid3tag-0.dll" />
+    <Content Include="sox-14.4.2\libogg-0.dll" />
+    <Content Include="sox-14.4.2\libpng16-16.dll" />
+    <Content Include="sox-14.4.2\libsox-3.dll" />
+    <Content Include="sox-14.4.2\libssp-0.dll" />
+    <Content Include="sox-14.4.2\libvorbis-0.dll" />
+    <Content Include="sox-14.4.2\libvorbisenc-2.dll" />
+    <Content Include="sox-14.4.2\libvorbisfile-3.dll" />
+    <Content Include="sox-14.4.2\libwavpack-1.dll" />
+    <Content Include="sox-14.4.2\libwinpthread-1.dll" />
+    <Content Include="sox-14.4.2\LICENSE.GPL.txt" />
+    <Content Include="sox-14.4.2\sox.exe" />
+    <Content Include="sox-14.4.2\zlib1.dll" />
     <Content Include="unlimitedinf.ico" />
   </ItemGroup>
   <ItemGroup>
