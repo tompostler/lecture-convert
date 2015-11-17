@@ -7,11 +7,16 @@
     /// <summary>
     /// Asynchronously download all the MP4 lecture files if they're not already downloaded.
     /// </summary>
-    internal static class Download
+    internal class Download
     {
-        private static int _filesDownloaded = 0;
+        private List<string> _statuses;
+        private List<LectureInfo> _lectures;
 
-        public static void Run(ICollection<LectureInfo> allLectures)
+        /// <summary>
+        /// Figure out which lectures we actually need to downoad.
+        /// </summary>
+        /// <param name="allLectures"></param>
+        public Download(ICollection<LectureInfo> allLectures)
         {
             // Check for the dir
             if (!Utility.Directory.Exists(LectureInfo.DirectoryNameMP4))
@@ -21,33 +26,37 @@
             }
 
             // Only download necessary lectures
-            List<LectureInfo> lectures = new List<LectureInfo>();
+            _lectures = new List<LectureInfo>();
             foreach (LectureInfo lecture in allLectures)
             {
                 if (!Utility.File.Exists(lecture.FileNameMP4))
                 {
-                    lectures.Add(lecture);
+                    _lectures.Add(lecture);
                 }
             }
-            Utility.Console.Log($"{lectures.Count} lectures to download");
+            Utility.Console.Log($"{_lectures.Count} lectures to download");
 
             // Create the list of messages to update on and the tasks to wait for
-            List<string> statuses = new List<string>(lectures.Count);
-            Task[] downloads = new Task[lectures.Count];
+            _statuses = new List<string>(_lectures.Count);
+            
+        }
 
+        public void Run()
+        {
             // Start the downloads
             int i = 0;
-            foreach (LectureInfo lecture in lectures)
+            Task[] downloads = new Task[_lectures.Count];
+            foreach (LectureInfo lecture in _lectures)
             {
-                statuses.Add("");
-                downloads[i] = DownloadFileAsync(lecture, statuses, i++);
+                _statuses.Add("");
+                downloads[i] = DownloadFileAsync(lecture, i++);
             }
 
             // Wait until all downloads are done
             Task.WaitAll(downloads);
 
             // Write all the lines past the progresses
-            foreach (string status in statuses)
+            foreach (string status in _statuses)
             {
                 Utility.Console.WriteLine(status);
             }
@@ -58,15 +67,13 @@
         /// every time another percent completes.
         /// </summary>
         /// <param name="lecture"></param>
-        /// <param name="statuses"></param>
         /// <param name="id"></param>
         /// <returns></returns>
-        private static async Task DownloadFileAsync(LectureInfo lecture, List<string> statuses, int id)
+        private async Task DownloadFileAsync(LectureInfo lecture, int id)
         {
             using (WebClient wc = new WebClient())
             {
-                wc.DownloadProgressChanged += (sender, e) => UpdateConsole(e.ProgressPercentage, lecture, statuses, id);
-                wc.DownloadFileCompleted += (sender, e) => _filesDownloaded++;
+                wc.DownloadProgressChanged += (sender, e) => UpdateConsole(e.ProgressPercentage, lecture, id);
                 await wc.DownloadFileTaskAsync(lecture.Url, lecture.FileNameMP4);
             }
         }
@@ -76,12 +83,11 @@
         /// </summary>
         /// <param name="e"></param>
         /// <param name="lecture"></param>
-        /// <param name="statuses"></param>
         /// <param name="id"></param>
-        private static void UpdateConsole(int progressPercentage, LectureInfo lecture, List<string> statuses, int id)
+        private void UpdateConsole(int progressPercentage, LectureInfo lecture, int id)
         {
-            statuses[id] = $"{id + 1}\t{lecture.FileNameMP4} is {progressPercentage}% complete.";
-            Utility.Console.WriteLinesAndReturn(statuses.ToArray());
+            _statuses[id] = $"{id + 1}:\t{lecture.FileNameMP4} is {progressPercentage}% complete.";
+            Utility.Console.WriteLinesAndReturn(_statuses.ToArray());
         }
     }
 }

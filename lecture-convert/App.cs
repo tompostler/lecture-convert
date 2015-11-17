@@ -37,10 +37,13 @@
         /// 4)  Update id3 tags             (if different than existing)
         public void Run()
         {
-            Download.Run(_lectures);
+            Download download = new Download(_lectures);
+            download.Run();
 
-            Convert convert = new Convert(_lectures);
-            convert.Run();
+            using (Convert convert = new Convert(_lectures))
+            {
+                convert.Run();
+            }
         }
     }
 }
