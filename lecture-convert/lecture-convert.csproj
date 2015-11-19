@@ -85,8 +85,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.cs" />
-    <Compile Include="Prepare.cs" />
-    <Compile Include="Convert.cs" />
+    <Compile Include="MP3toMP3.cs" />
+    <Compile Include="MP4toMP3.cs" />
     <Compile Include="Download.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="LectureInfo.cs" />

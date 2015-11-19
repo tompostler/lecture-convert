@@ -33,14 +33,14 @@
         /// This method will do the following four things in order:
         /// 1)  Download the mp4s           (if not already existing)
         /// 2)  Convert the mp4s to mp3s    (if not already existing)
-        /// 3)  Prepare the mp3s            (if not already existing)
+        /// 3)  Process the mp3s            (if not already existing)
         /// 4)  Update id3 tags on all mp3s (if different than existing)
         public void Run()
         {
             Download download = new Download(_lectures);
             download.Run();
 
-            using (Convert convert = new Convert(_lectures))
+            using (MP4toMP3 convert = new MP4toMP3(_lectures))
             {
                 convert.Run();
             }

@@ -7,41 +7,41 @@
     using System.Threading.Tasks;
 
     /// <summary>
-    /// Run the conversions from mp4 to mp3 by as many processors as available at the same time.
+    /// Run the conversions from mp3 to mp3 by as many processors as available at the same time.
     /// </summary>
-    internal class Convert : IDisposable
+    internal class MP3toMP3 : IDisposable
     {
         private string[] _statuses;
-        private List<Process> _conversions;
+        private List<Process> _preparations;
         private SemaphoreSlim _processLimit;
 
         /// <summary>
-        /// Figure out which lectures we actually need to convert.
+        /// Figure out which lectures we actually need to process.
         /// </summary>
         /// <param name="allLectures"></param>
-        public Convert(ICollection<LectureInfo> allLectures)
+        public MP3toMP3(ICollection<LectureInfo> allLectures)
         {
             // Check for the dir
-            if (!Utility.Directory.Exists(LectureInfo.DirectoryNameMP3))
+            if (!Utility.Directory.Exists(LectureInfo.DirectoryNameMP3Cleaned))
             {
-                Utility.Console.Log($"Directory not found: {LectureInfo.DirectoryNameMP3}");
-                System.IO.Directory.CreateDirectory(LectureInfo.DirectoryNameMP3);
-                Utility.Console.Log($"Created directory: {LectureInfo.DirectoryNameMP3}");
+                Utility.Console.Log($"Directory not found: {LectureInfo.DirectoryNameMP3Cleaned}");
+                System.IO.Directory.CreateDirectory(LectureInfo.DirectoryNameMP3Cleaned);
+                Utility.Console.Log($"Created directory: {LectureInfo.DirectoryNameMP3Cleaned}");
             }
 
-            // Only convert the necessary lectures
+            // Only process the necessary lectures
             List<LectureInfo> lectures = new List<LectureInfo>();
             foreach (LectureInfo lecture in allLectures)
             {
-                if (!Utility.File.Exists(lecture.FileNameMP3))
+                if (!Utility.File.Exists(lecture.FileNameMP3Cleaned))
                 {
                     lectures.Add(lecture);
                 }
             }
-            Utility.Console.Log($"{lectures.Count} lectures to convert");
+            Utility.Console.Log($"{lectures.Count} lectures to prepare for consumption");
             if (lectures.Count > 0)
             {
-                Utility.Console.Log($"{Environment.ProcessorCount} concurrent ffmpeg procs max");
+                Utility.Console.Log($"{Environment.ProcessorCount} concurrent sox procs max");
             }
 
             // Create the list of messages to update on and the processes to wait for
@@ -51,19 +51,19 @@
         }
 
         /// <summary>
-        /// Run the conversions.
+        /// Run the processings.
         /// </summary>
         public void Run()
         {
-            // Start the conversions
-            Task[] conversions = new Task[_conversions.Count];
-            for (int i = 0; i < _conversions.Count; i++)
+            // Start the processings
+            Task[] conversions = new Task[_preparations.Count];
+            for (int i = 0; i < _preparations.Count; i++)
             {
                 int processNum = i;
                 conversions[i] = Task.Run(() => RunProcess(processNum));
             }
 
-            // Wait until all conversions are done
+            // Wait until all processings are done
             Task.WaitAll(conversions);
             _processLimit.Dispose();
 
@@ -76,7 +76,7 @@
 
         private void RunProcess(int processNum)
         {
-            Process process = _conversions[processNum];
+            Process process = _preparations[processNum];
             // Start the process and set up the output
             process.ErrorDataReceived += (sender, e) => UpdateConsole(e.Data, processNum);
             _processLimit.Wait();
@@ -92,6 +92,7 @@
         /// </summary>
         /// <param name="data"></param>
         /// <param name="i"></param>
+        /// TODO: Refactor this for sox output
         private void UpdateConsole(string data, int i)
         {
             // Null string indicates end of stream. Kindly let the user know
@@ -112,25 +113,26 @@
         /// Set up the processes with all necessary information and place them in a list.
         /// </summary>
         /// <param name="lectures"></param>
+        /// TODO: Refactor this for sox options
         private void SetUpProcesses(List<LectureInfo> lectures)
         {
-            _conversions = new List<Process>(lectures.Count);
+            _preparations = new List<Process>(lectures.Count);
 
             // Set up the processes
             foreach (LectureInfo lecture in lectures)
             {
                 // Set up the starting process
                 ProcessStartInfo processInfo = new ProcessStartInfo();
-                processInfo.Arguments = $"-i {lecture.FileNameMP4} -vn -q:a 0 {lecture.FileNameMP3}";
+                processInfo.Arguments = $"{lecture.FileNameMP3} {lecture.FileNameMP3Cleaned} options";
                 processInfo.CreateNoWindow = false;
-                processInfo.FileName = "ffmpeg.exe";
+                processInfo.FileName = "sox.exe";
                 processInfo.RedirectStandardError = true;
                 processInfo.UseShellExecute = false;
 
                 // Add the process into the list
                 Process process = new Process();
                 process.StartInfo = processInfo;
-                _conversions.Add(process);
+                _preparations.Add(process);
             }
         }
 
