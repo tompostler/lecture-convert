@@ -19,7 +19,7 @@
         public Download(ICollection<LectureInfo> allLectures)
         {
             // Check for the dir
-            if (!Utility.Directory.Exists(LectureInfo.DirectoryNameMP4))
+            if (allLectures.Count > 0 && !Utility.Directory.Exists(LectureInfo.DirectoryNameMP4))
             {
                 Utility.Console.Log($"Directory not found: {LectureInfo.DirectoryNameMP4}");
                 System.IO.Directory.CreateDirectory(LectureInfo.DirectoryNameMP4);

@@ -22,7 +22,7 @@
         public MP3toMP3(ICollection<LectureInfo> allLectures)
         {
             // Check for the dir
-            if (!Utility.Directory.Exists(LectureInfo.DirectoryNameMP3Cleaned))
+            if (allLectures.Count > 0 && !Utility.Directory.Exists(LectureInfo.DirectoryNameMP3Cleaned))
             {
                 Utility.Console.Log($"Directory not found: {LectureInfo.DirectoryNameMP3Cleaned}");
                 System.IO.Directory.CreateDirectory(LectureInfo.DirectoryNameMP3Cleaned);
@@ -38,7 +38,7 @@
                     lectures.Add(lecture);
                 }
             }
-            Utility.Console.Log($"{lectures.Count} lectures to prepare for consumption");
+            Utility.Console.Log($"{lectures.Count} lectures to process");
             if (lectures.Count > 0)
             {
                 Utility.Console.Log($"{Environment.ProcessorCount} concurrent sox procs max");
