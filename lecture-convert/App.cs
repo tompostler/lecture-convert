@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
 
     /// <summary>
     /// The main application.
@@ -34,9 +35,11 @@
         /// 1)  Download the mp4s           (if not already existing)
         /// 2)  Convert the mp4s to mp3s    (if not already existing)
         /// 3)  Process the mp3s            (if not already existing)
-        /// 4)  Update id3 tags on all mp3s (if different than existing)
+        /// 4)  Update id3 tags on all mp3s (just update all of them)
         public void Run()
         {
+            Stopwatch stopwatch = Stopwatch.StartNew();
+
             Download download = new Download(_lectures);
             download.Run();
 
@@ -44,6 +47,18 @@
             {
                 convert.Run();
             }
+
+            //using (MP3toMP3 process = new MP3toMP3(_lectures))
+            //{
+            //    process.Run();
+            //}
+
+            ID3 tagging = new ID3(_lectures);
+            tagging.Run();
+
+            stopwatch.Stop();
+
+            Utility.Console.Log($"Completed operations in {stopwatch.Elapsed}");
         }
     }
 }

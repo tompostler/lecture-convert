@@ -85,6 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.cs" />
+    <Compile Include="ID3.cs" />
     <Compile Include="MP3toMP3.cs" />
     <Compile Include="MP4toMP3.cs" />
     <Compile Include="Download.cs" />
