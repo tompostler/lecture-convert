@@ -16,8 +16,10 @@
         public ID3(ICollection<LectureInfo> allLectures)
         {
             _lectures = new List<LectureInfo>(allLectures.Count);
+            int lectureTrack = 1;
             foreach (LectureInfo lecture in allLectures)
             {
+                lecture.Track = lectureTrack++;
                 _lectures.Add(lecture);
             }
             Utility.Console.Log($"{_lectures.Count * 2} to update tags for.");

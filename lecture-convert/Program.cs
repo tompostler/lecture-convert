@@ -23,16 +23,23 @@ namespace UnlimitedInf.LectureConvert
                 "Download recorded .mp4 lecture files and convert them into sped up and normalized .mp3s with proper id3 tags for easier on-the-go consumption.",
                 "",
                 "Each line in the input text file for the downloaded recordings should be set up as follows for each line:",
-                "   URL/to/file|AlbumName|TrackTitle|TrackNumber",
+                "   URL/to/file|AlbumName|TrackTitle",
                 "",
-                "The resulting filename will be gleaned from the above information, but it does not bother to check if you gave it a sensical name or not.",
+                "The resulting filename will be gleaned from the above information, but it does not bother to check if you gave it a sensical name or not. Additionally, track numbering will simply be performed sequentially within the file starting at 1.",
                 "The file name is formed as follows:",
                 "   AlbumName_TrackTitle.mp[3|4]",
-                //"",
-                //"Options:",
-                //{
-                //    ""
-                //}
+                "",
+                "Options:",
+                {
+                    "dir=|d=",
+                    "The top level directory to use for execution. A input.txt file containing the lecture information should be within this directory instead of specifying INPUTFILE.",
+                    (val) => opts.Directory = val
+                },
+                {
+                    "help|h|?",
+                    "Print this help text and die.",
+                    (val) => opts.Die = true
+                },
                 "",
                 "INPUTFILE:",
                 "\tThe input file to parse for URLs, file naming, and id3 tag information."
@@ -47,21 +54,45 @@ namespace UnlimitedInf.LectureConvert
             catch (OptionException e)
             {
                 Utility.Console.Error(e.Message);
+                p.WriteOptionDescriptions(Console.Out);
                 return;
             }
 
+            // Check if we're asking for help
+            if (opts.Die)
+            {
+                p.WriteOptionDescriptions(Console.Out);
+                return;
+            }
+
+            // See if we're grabbing the input file from dir
+            string inputFile = "";
+            if (Utility.Directory.Exists(opts.Directory))
+            {
+                inputFile = opts.Directory + Path.DirectorySeparatorChar + "input.txt";
+                if (!Utility.File.Exists(inputFile))
+                {
+                    inputFile = "";
+                }
+            }
+
             // Make sure we have our input file
-            if (file.Count != 1)
+            if (file.Count != 1 && String.IsNullOrEmpty(inputFile))
             {
                 Utility.Console.Error("Must have one INPUTFILE.");
+                p.WriteOptionDescriptions(Console.Out);
                 return;
+            }
+            if (String.IsNullOrEmpty(inputFile))
+            {
+                inputFile = file[0];
             }
 
             // Parse the input file
             try
             {
                 // Open the text file
-                using (StreamReader r = File.OpenText(file[0]))
+                using (StreamReader r = File.OpenText(inputFile))
                 {
                     string line;
                     // While there are still lines to read
@@ -76,9 +107,10 @@ namespace UnlimitedInf.LectureConvert
 
                         // Split the line by | and make sure there are three parts
                         string[] lineData = line.Split('|');
-                        if (lineData.Length != 4)
+                        if (lineData.Length != 3)
                         {
                             Utility.Console.Error($"Invalid line in INPUTFILE: {line}");
+                            p.WriteOptionDescriptions(Console.Out);
                             return;
                         }
 
@@ -87,7 +119,6 @@ namespace UnlimitedInf.LectureConvert
                         info.Url = new Uri(lineData[0]);
                         info.AlbumName = lineData[1];
                         info.Title = lineData[2];
-                        info.Track = Int32.Parse(lineData[3]);
                         opts.Lectures.Add(info);
                     }
                 }
@@ -95,6 +126,7 @@ namespace UnlimitedInf.LectureConvert
             catch (Exception e)
             {
                 Utility.Console.Error(e.Message);
+                p.WriteOptionDescriptions(Console.Out);
                 return;
             }
 
