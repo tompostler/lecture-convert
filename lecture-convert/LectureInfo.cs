@@ -19,8 +19,23 @@
         public string FileNameMP3Cleaned    => DirectoryNameMP3Cleaned + Path.DirectorySeparatorChar + _fileNameMP3;
         public string FileNameMP4           => DirectoryNameMP4 + Path.DirectorySeparatorChar + _fileNameMP4;
 
-        public static string DirectoryNameMP4           => "mp4s";
-        public static string DirectoryNameMP3           => "mp3s";
-        public static string DirectoryNameMP3Cleaned    => "cleaned";
+        private static string _directory = "";
+        /// <summary>
+        /// Assumes that you provided a valid directory since the program should have died before actually using this.
+        /// </summary>
+        public static string Directory
+        {
+            get
+            {
+                return _directory;
+            }
+            set
+            {
+                _directory = value + Path.DirectorySeparatorChar;
+            }
+        }
+        public static string DirectoryNameMP4           => Directory + "mp4s";
+        public static string DirectoryNameMP3           => Directory + "mp3s";
+        public static string DirectoryNameMP3Cleaned    => Directory + "cleaned";
     }
 }

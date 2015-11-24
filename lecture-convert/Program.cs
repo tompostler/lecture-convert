@@ -70,6 +70,7 @@ namespace UnlimitedInf.LectureConvert
             if (Utility.Directory.Exists(opts.Directory))
             {
                 inputFile = opts.Directory + Path.DirectorySeparatorChar + "input.txt";
+                LectureInfo.Directory = opts.Directory;
                 if (!Utility.File.Exists(inputFile))
                 {
                     inputFile = "";
