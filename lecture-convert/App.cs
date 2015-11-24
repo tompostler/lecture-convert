@@ -48,10 +48,10 @@
                 convert.Run();
             }
 
-            //using (MP3toMP3 process = new MP3toMP3(_lectures))
-            //{
-            //    process.Run();
-            //}
+            using (MP3toMP3 process = new MP3toMP3(_lectures))
+            {
+                process.Run();
+            }
 
             ID3 tagging = new ID3(_lectures);
             tagging.Run();

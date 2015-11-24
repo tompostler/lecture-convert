@@ -92,7 +92,6 @@
         /// </summary>
         /// <param name="data"></param>
         /// <param name="i"></param>
-        /// TODO: Refactor this for sox output
         private void UpdateConsole(string data, int i)
         {
             // Null string indicates end of stream. Kindly let the user know
@@ -101,8 +100,8 @@
                 _statuses[i] += "done.";
                 Utility.Console.WriteLinesAndReturn(_statuses);
             }
-            // If the line does not begin with 'size', then don't print it
-            else if (data.StartsWith("size"))
+            // If the line does not begin with 'In:', then don't print it
+            else if (data.StartsWith("In:"))
             {
                 _statuses[i] = $"{i + 1}:\t{data}";
                 Utility.Console.WriteLinesAndReturn(_statuses);
@@ -113,7 +112,43 @@
         /// Set up the processes with all necessary information and place them in a list.
         /// </summary>
         /// <param name="lectures"></param>
-        /// TODO: Refactor this for sox options
+        /// An explanation of the sox options are in order... With some descriptions copied from 
+        /// the sox docs.
+        /// --show-progress         Give us the progress output to show the user.
+        /// --compression 64        Output mp3 file at 64kbps.
+        /// compand 0.26,1.0        The attack and decay parameters (in seconds) determine the time 
+        ///                         over which the instantaneous level of the input signal is 
+        ///                         averaged to determine its volume; attacks refer to increases in 
+        ///                         volume and decays refer to decreases. For most situations, the 
+        ///                         attack time should be shorter than the decay time because the 
+        ///                         human ear is more sensitive to sudden loud audio than sudden 
+        ///                         soft audio.
+        ///     6:-70,-60,-20       A list of points on the compander’s transfer function specified 
+        ///                         in dB relative to the maximum possible signal amplitude.
+        ///                         This says that very soft sounds (below −70dB) will remain 
+        ///                         unchanged. This will stop the compander from boosting the 
+        ///                         volume on ‘silent’ passages such as between sentences. However, 
+        ///                         sounds in the range −60dB to 0dB (maximum volume) will be 
+        ///                         boosted so that the 60dB dynamic range of the original audio 
+        ///                         will be compressed 3-to-1 into a 20dB range, which is wide 
+        ///                         enough to enjoy the audio but narrow enough to get around the 
+        ///                         road noise. The ‘6:’ selects 6dB soft-knee companding.
+        ///     -5                  The −5 (dB) output gain is needed to avoid clipping (the number 
+        ///                         is inexact, and was derived by experimentation).
+        ///     -90                 The −90 (dB) for the initial volume will work fine for a clip 
+        ///                         that starts with near silence.
+        ///     0.2                 The delay of 0.2 (seconds) has the effect of causing the 
+        ///                         compander to react a bit more quickly to sudden volume changes.
+        /// reverse                 Reverse the audio to better work with the first call of silence.
+        /// silence 1 1t -50d       Trim all silence from the 'beginning' (actually end due to 
+        ///                         reverse) of the audio until the audio is louder than -50dB for 
+        ///                         more than 1s.
+        /// reverse                 Flip the audio right way round.
+        /// silence -l 1 5 -50d     Trim any silence remaining from the beginning of the audio.
+        ///     -1 10t -50d         And then trim any other silences from within the audio (-l) 
+        ///                         lasting more than 10s (10t)
+        /// tempo -s 1.4            Increase speed by 40% without affecting pitch. '-s' is a 
+        ///                         shortcut to use speech audio presets.
         private void SetUpProcesses(List<LectureInfo> lectures)
         {
             _preparations = new List<Process>(lectures.Count);
@@ -123,9 +158,10 @@
             {
                 // Set up the starting process
                 ProcessStartInfo processInfo = new ProcessStartInfo();
-                processInfo.Arguments = $"{lecture.FileNameMP3} {lecture.FileNameMP3Cleaned} options";
+                processInfo.Arguments = $"--show-progress {lecture.FileNameMP3} --compression 64 {lecture.FileNameMP3Cleaned} compand 0.26,1.0 6:-70,-60,-20 -5 -90 0.2 reverse silence 1 1t -50d reverse silence -l 1 5 -50d -1 10t -50d tempo -s 1.4";
                 processInfo.CreateNoWindow = false;
-                processInfo.FileName = "sox.exe";
+                processInfo.FileName = "sox-14.4.2" + System.IO.Path.DirectorySeparatorChar + "sox.exe";
+                processInfo.RedirectStandardOutput = true;
                 processInfo.RedirectStandardError = true;
                 processInfo.UseShellExecute = false;
 
