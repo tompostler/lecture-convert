@@ -1,0 +1,23 @@
+﻿	Usage: lectureconvert [OPTIONS] INPUTFILE
+	Download recorded .mp4 lecture files and convert them into sped up and
+	normalized .mp3s with proper id3 tags for easier on-the-go consumption.
+
+	Each line in the input text file for the downloaded recordings should be set up
+	as follows for each line:
+	   URL/to/file|AlbumName|TrackTitle
+
+	The resulting filename will be gleaned from the above information, but it does
+	not bother to check if you gave it a sensical name or not. Additionally, track
+	numbering will simply be performed sequentially within the file starting at 1.
+	The file name is formed as follows:
+	   AlbumName_TrackTitle.mp[3|4]
+
+	Options:
+		  --dir, -d=VALUE        The top level directory to use for execution. A
+								   input.txt file containing the lecture
+								   information should be within this directory
+								   instead of specifying INPUTFILE.
+		  --help, -h, -?         Print this help text and die.
+
+	INPUTFILE:
+			The input file to parse for URLs, file naming, and id3 tag information.
