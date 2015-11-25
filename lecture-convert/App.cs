@@ -10,9 +10,11 @@
     /// This program makes a couple of assumptions since it is to be used internally by one person 
     /// that's not trying to do anything stupid while the program is running:
     ///     - No file safety checks. Assumes a rigid file structure that won't be changing.
+    ///     - Uses some default values based on a reasonable network with a recent i5 or better and
+    ///       an SSD.
     public sealed class App
     {
-        private ICollection<LectureInfo> _lectures { get; }
+        private Options _opts { get; }
 
         /// <summary>
         /// Ctor. Cannot create the main application without supplying options.
@@ -25,7 +27,7 @@
                 throw new ArgumentNullException(nameof(opts));
             }
 
-            _lectures = opts.Lectures;
+            _opts = opts;
         }
 
         /// <summary>
@@ -40,20 +42,20 @@
         {
             Stopwatch stopwatch = Stopwatch.StartNew();
 
-            Download download = new Download(_lectures);
+            Download download = new Download(_opts.Lectures);
             download.Run();
 
-            using (MP4toMP3 convert = new MP4toMP3(_lectures))
+            using (MP4toMP3 convert = new MP4toMP3(_opts.Lectures, _opts.FFMpegProcesses))
             {
                 convert.Run();
             }
 
-            using (MP3toMP3 process = new MP3toMP3(_lectures))
+            using (MP3toMP3 process = new MP3toMP3(_opts.Lectures, _opts.SoxProcesses))
             {
                 process.Run();
             }
 
-            ID3 tagging = new ID3(_lectures);
+            ID3 tagging = new ID3(_opts.Lectures);
             tagging.Run();
 
             stopwatch.Stop();

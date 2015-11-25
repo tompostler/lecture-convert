@@ -31,14 +31,24 @@ namespace UnlimitedInf.LectureConvert
                 "",
                 "Options:",
                 {
+                    "help|h|?",
+                    "Print this help text and die.",
+                    (val) => opts.Die = true
+                },
+                {
                     "dir=|d=",
                     "The top level directory to use for execution. A input.txt file containing the lecture information should be within this directory instead of specifying INPUTFILE.",
                     (val) => opts.Directory = val
                 },
                 {
-                    "help|h|?",
-                    "Print this help text and die.",
-                    (val) => opts.Die = true
+                    "ffmpeg-processes=|fp=",
+                    "The maximum number of ffmpeg processes to let run at one time. FFMpeg is generally constrained by the CPU, so this defaults to Environment.ProcessorCount.",
+                    (val) => opts.FFMpegProcesses = Int32.Parse(val)
+                },
+                {
+                    "sox-processes=|sp=",
+                    "The maximum number of sox processes to let run at one time. Sox is generally constrained by the disk, so this defaults to 2.",
+                    (val) => opts.SoxProcesses = Int32.Parse(val)
                 },
                 "",
                 "INPUTFILE:",

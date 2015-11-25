@@ -19,7 +19,8 @@
         /// Figure out which lectures we actually need to convert.
         /// </summary>
         /// <param name="allLectures"></param>
-        public MP4toMP3(ICollection<LectureInfo> allLectures)
+        /// <param name="ffmpegProcLimit"></param>
+        public MP4toMP3(ICollection<LectureInfo> allLectures, int ffmpegProcLimit)
         {
             // Check for the dir
             if (allLectures.Count > 0 && !Utility.Directory.Exists(LectureInfo.DirectoryNameMP3))
@@ -39,14 +40,20 @@
                 }
             }
             Utility.Console.Log($"{lectures.Count} lectures to convert");
+
+            // Figure out the concurrent processor amount
+            if (ffmpegProcLimit == default(int) || ffmpegProcLimit < 0)
+            {
+                ffmpegProcLimit = Options.FFMpegProcessesDefault;
+            }
             if (lectures.Count > 0)
             {
-                Utility.Console.Log($"{Environment.ProcessorCount} concurrent ffmpeg procs max");
+                Utility.Console.Log($"{ffmpegProcLimit} concurrent ffmpeg procs max");
             }
 
             // Create the list of messages to update on and the processes to wait for
             _statuses = new string[lectures.Count];
-            _processLimit = new SemaphoreSlim(Environment.ProcessorCount);
+            _processLimit = new SemaphoreSlim(ffmpegProcLimit);
             SetUpProcesses(lectures);
         }
 

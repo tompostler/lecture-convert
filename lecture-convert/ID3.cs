@@ -22,7 +22,7 @@
                 lecture.Track = lectureTrack++;
                 _lectures.Add(lecture);
             }
-            Utility.Console.Log($"{_lectures.Count * 2} to update tags for.");
+            Utility.Console.Log($"{_lectures.Count * 2} lectures to retag.");
         }
 
         /// <summary>
