@@ -102,7 +102,6 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-    <None Include="README.md" />
     <None Include="sox-14.4.2\sox.pdf" />
   </ItemGroup>
   <ItemGroup>
