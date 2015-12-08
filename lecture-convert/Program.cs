@@ -117,9 +117,9 @@ namespace UnlimitedInf.LectureConvert
                             continue;
                         }
 
-                        // Split the line by | and make sure there are three parts
+                        // Split the line by | and make sure there are two parts
                         string[] lineData = line.Split('|');
-                        if (lineData.Length != 3)
+                        if (lineData.Length != 2)
                         {
                             Utility.Console.Error($"Invalid line in input.txt: {line}");
                             p.WriteOptionDescriptions(Console.Out);
@@ -129,8 +129,8 @@ namespace UnlimitedInf.LectureConvert
                         // Fill a lecture info
                         LectureInfo info = new LectureInfo();
                         info.Url = new Uri(lineData[0]);
-                        info.AlbumName = lineData[1];
-                        info.Title = lineData[2];
+                        info.AlbumName = dirs[0];
+                        info.Title = lineData[1];
                         opts.Lectures.Add(info);
                     }
                 }

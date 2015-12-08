@@ -13,8 +13,9 @@
         public string Title { get; set; }
         public int Track { get; set; }
 
-        private string _fileNameMP3         => AlbumName + '_' + Title + ".mp3";
-        private string _fileNameMP4         => AlbumName + '_' + Title + ".mp4";
+        private string _fileNameTitle       => String.Join("", Title.Split(Path.GetInvalidFileNameChars())).Replace(' ', '-');
+        private string _fileNameMP3         => AlbumName + '_' + _fileNameTitle + ".mp3";
+        private string _fileNameMP4         => AlbumName + '_' + _fileNameTitle + ".mp4";
         public string FileNameMP3           => DirectoryNameMP3 + Path.DirectorySeparatorChar + _fileNameMP3;
         public string FileNameMP3Cleaned    => DirectoryNameMP3Cleaned + Path.DirectorySeparatorChar + _fileNameMP3;
         public string FileNameMP4           => DirectoryNameMP4 + Path.DirectorySeparatorChar + _fileNameMP4;

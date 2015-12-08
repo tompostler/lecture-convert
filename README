@@ -1,32 +1,33 @@
-﻿    Usage: lectureconvert [OPTIONS] INPUTFILE
-    Download recorded .mp4 lecture files and convert them into sped up and
-    normalized .mp3s with proper id3 tags for easier on-the-go consumption.
+﻿LECTURECONVERT: Must have one INPUTDIR
 
-    Each line in the input text file for the downloaded recordings should be set up
-    as follows for each line:
-       URL/to/file|AlbumName|TrackTitle
+Usage: lectureconvert [OPTIONS] INPUTDIR
+Download recorded .mp4 lecture files and convert them into sped up and
+normalized .mp3s with proper id3 tags for easier on-the-go consumption.
 
-    The resulting filename will be gleaned from the above information, but it does
-    not bother to check if you gave it a sensical name or not. Additionally, track
-    numbering will simply be performed sequentially within the file starting at 1.
-    The file name is formed as follows:
-       AlbumName_TrackTitle.mp[3|4]
+Each line in the input.txt text file for the downloaded recordings should be
+set up as follows for each line:
+   URL/to/file|TrackTitle
 
-    Options:
-          --help, -h, -?         Print this help text and die.
-          --dir, -d=VALUE        The top level directory to use for execution. A
-                                   input.txt file containing the lecture
-                                   information should be within this directory
-                                   instead of specifying INPUTFILE.
-          --ffmpeg-processes, --fp=VALUE
-                                 The maximum number of ffmpeg processes to let run
-                                   at one time. FFMpeg is generally constrained by
-                                   the CPU, so this defaults to Environment.
-                                   ProcessorCount.
-          --sox-processes, --sp=VALUE
-                                 The maximum number of sox processes to let run at
-                                   one time. Sox is generally constrained by the
-                                   disk, so this defaults to 2.
+The resulting filename will be gleaned from the above information, and the
+filename gleaned from TrackTitle will be normalized so there are no offending
+characters or spaces for the current filesystem. Additionally, track numbering
+will simply be performed sequentially within the file starting at 1.
+The file name is formed as follows:
+   AlbumName_TrackTitle.mp[3|4]
 
-    INPUTFILE:
-            The input file to parse for URLs, file naming, and id3 tag information.
+Options:
+      --help, -h, -?         Print this help text and die.
+      --ffmpeg-processes, --fp=VALUE
+                             The maximum number of ffmpeg processes to let run
+                               at one time. FFMpeg is generally constrained by
+                               the CPU, so this defaults to Environment.
+                               ProcessorCount.
+      --sox-processes, --sp=VALUE
+                             The maximum number of sox processes to let run at
+                               one time. Sox is generally constrained by the
+                               disk, so this defaults to 2.
+
+INPUTDIR:
+        The input file to parse for URLs, file naming, and id3 tag information.
+
+Version: 1.0.0
