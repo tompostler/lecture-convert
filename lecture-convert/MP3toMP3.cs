@@ -19,7 +19,8 @@
         /// Figure out which lectures we actually need to process.
         /// </summary>
         /// <param name="allLectures"></param>
-        public MP3toMP3(ICollection<LectureInfo> allLectures)
+        /// <param name="soxProcLimit"></param>
+        public MP3toMP3(ICollection<LectureInfo> allLectures, int soxProcLimit)
         {
             // Check for the dir
             if (allLectures.Count > 0 && !Utility.Directory.Exists(LectureInfo.DirectoryNameMP3Cleaned))
@@ -39,14 +40,20 @@
                 }
             }
             Utility.Console.Log($"{lectures.Count} lectures to process");
+
+            // Figure out the concurrent processor amount
+            if (soxProcLimit == default(int) || soxProcLimit < 0)
+            {
+                soxProcLimit = Options.SoxProcessesDefault;
+            }
             if (lectures.Count > 0)
             {
-                Utility.Console.Log($"{Environment.ProcessorCount} concurrent sox procs max");
+                Utility.Console.Log($"{soxProcLimit} concurrent sox procs max");
             }
 
             // Create the list of messages to update on and the processes to wait for
             _statuses = new string[lectures.Count];
-            _processLimit = new SemaphoreSlim(Environment.ProcessorCount);
+            _processLimit = new SemaphoreSlim(soxProcLimit);
             SetUpProcesses(lectures);
         }
 
