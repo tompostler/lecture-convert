@@ -42,7 +42,9 @@ namespace UnlimitedInf.LectureConvert
                 },
                 "",
                 "INPUTFILE:",
-                "\tThe input file to parse for URLs, file naming, and id3 tag information."
+                "\tThe input file to parse for URLs, file naming, and id3 tag information.",
+                "",
+                "Version: 1.0.0"
             };
 
             // Parse the args
