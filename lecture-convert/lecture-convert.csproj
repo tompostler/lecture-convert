@@ -105,6 +105,7 @@
     <None Include="sox-14.4.2\sox.pdf" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Changes.md" />
     <Content Include="ffmpeg.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
