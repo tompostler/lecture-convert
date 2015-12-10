@@ -13,7 +13,23 @@
         public string Title { get; set; }
         public int Track { get; set; }
 
-        private string _fileNameTitle       => String.Join("", Title.Split(Path.GetInvalidFileNameChars())).Replace(' ', '-');
+        /// <summary>
+        /// Strip everything that's not [a-zA-Z0-9_ -] and replace spaces with -
+        /// </summary>
+        private string _fileNameTitle
+        {
+            get
+            {
+                char[] arr = Title.ToCharArray();
+                arr = Array.FindAll<char>(arr, (c => char.IsLetterOrDigit(c)
+                                                    || char.IsWhiteSpace(c)
+                                                    || c == '-'
+                                                    || c == '_'));
+                string result = new string(arr);
+                return result.Replace(' ', '-');
+            }
+        }
+
         private string _fileNameMP3         => AlbumName + '_' + _fileNameTitle + ".mp3";
         private string _fileNameMP4         => AlbumName + '_' + _fileNameTitle + ".mp4";
         public string FileNameMP3           => DirectoryNameMP3 + Path.DirectorySeparatorChar + _fileNameMP3;
